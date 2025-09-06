@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Explore Monasteries - Sikkim Tourism</title>
-  <link rel="stylesheet" href="explore-styles.css">
+  <link rel="stylesheet" href="explore-styles1.css">
 </head>
 <body>
   <!-- Navbar -->
@@ -29,101 +29,83 @@
   </header>
 
   <!-- Hero -->
-  <section class="hero">
-    <div class="overlay">
-        <img src="collage.png" alt="Sikkim cover">
-    </div>
-    <div class="hero-text">
-      <h1>Explore Sikkim's Monasteries</h1>
-      <p>Discover peace, spirituality, and heritage in the Himalayas</p>
-    </div>
-  </section>
+<section class="hero">
+  <div class="overlay"></div>
+  <div class="hero-text">
+    <h1>Explore Sikkim's Monasteries</h1>
+    <p>Discover peace, spirituality, and heritage in the Himalayas</p>
+  </div>
+</section>
 
-  <!-- Explore Section -->
-  <section class="section light">
-    <h2 class="section-title">Monasteries</h2>
-    <div class="card-grid">
-      
-      <!-- Card Template -->
-      <div class="monastery-card">
-        <img src="enchey.jpg" alt="Enchey Monastery">
-        <h3>Enchey Monastery</h3>
-        <button class="toggle-btn">View Details</button>
-        <div class="toggle-content">
-          <h4>History</h4>
-          <p>Built over 200 years ago, associated with Lama Drupthob Karpo, known for his flying powers.</p>
-          <h4>Architecture</h4>
-          <p>Traditional Tibetan style with ornate woodwork and images of protective deities.</p>
-          <h4>Festivals</h4>
-          <p>Hosts Chaam Dance Festival (Dec/Jan), celebrating victory of good over evil.</p>
-          <h4>Visitor Info</h4>
-          <p>3 km from Gangtok; best visited during festivals.</p>
-        </div>
-      </div>
 
-      <div class="monastery-card">
+<!-- Explore Grid -->
+<section class="explore-section">
+  <div class="explore-grid">
+    <!-- Rumtek -->
+    <div class="monastery odd">
+        <a href="rumtek.html" class="card-link">
+      <div class="card">
         <img src="rumtek.jpg" alt="Rumtek Monastery">
-        <h3>Rumtek Monastery</h3>
-        <button class="toggle-btn">View Details</button>
-        <div class="toggle-content">
-          <h4>History</h4>
-          <p>Seat of the Karmapa; originally built in the 16th century, rebuilt in the 1960s.</p>
-          <h4>Architecture</h4>
-          <p>Massive Tibetan-style structure with golden stupa and intricate murals.</p>
-          <h4>Festivals</h4>
-          <p>Main site for Kagyu rituals, with traditional Cham dances.</p>
-          <h4>Visitor Info</h4>
-          <p>24 km from Gangtok; entry fee applies for tourists.</p>
-        </div>
+        <div class="card-text">Rumtek Monastery</div>
+        </a>
       </div>
+      <div class="description">
+        Known as the Dharma Chakra Centre, Rumtek is one of Sikkim’s largest and most important monasteries. It houses sacred relics and serves as the seat of the Karmapa Lama.
+      </div>
+    </div>
 
-      <div class="monastery-card">
+    <!-- Pemayangtse -->
+    <div class="monastery even">
+        <a href="pemayangtse.html" class="card-link">
+      <div class="card">
         <img src="pemayangtse.jpg" alt="Pemayangtse Monastery">
-        <h3>Pemayangtse Monastery</h3>
-        <button class="toggle-btn">View Details</button>
-        <div class="toggle-content">
-          <h4>History</h4>
-          <p>Founded in the 17th century; one of the oldest monasteries of Sikkim.</p>
-          <h4>Architecture</h4>
-          <p>Known for its seven-tiered wooden structure "Zangdok Palri".</p>
-          <h4>Festivals</h4>
-          <p>Losar and Cham dance festivals draw many pilgrims.</p>
-          <h4>Visitor Info</h4>
-          <p>Located near Pelling; offers scenic views of Kanchenjunga.</p>
-        </div>
+        <div class="card-text">Pemayangtse Monastery</div>
+        </a>
       </div>
+      <div class="description">
+        Built in the 17th century, Pemayangtse is a premier Nyingma monastery. It is famous for its intricate wooden sculptures and stunning views of Kanchenjunga.
+      </div>
+    </div>
 
-      <div class="monastery-card">
+    <!-- Enchey -->
+    <div class="monastery odd">
+        <a href="enchey.html" class="card-link">
+      <div class="card">
+        <img src="enchey.jpg" alt="Enchey Monastery">
+        <div class="card-text">Enchey Monastery</div>
+        </a>
+      </div>
+      <div class="description">
+        Located in Gangtok, Enchey Monastery is a 200-year-old monastery known for its annual Cham dance and peaceful atmosphere amidst pine forests.
+      </div>
+    </div>
+
+    <!-- Tashiding -->
+    <div class="monastery even">
+        <a href="tashiding.html" class="card-link">
+      <div class="card"> 
         <img src="tashiding.jpg" alt="Tashiding Monastery">
-        <h3>Tashiding Monastery</h3>
-        <button class="toggle-btn">View Details</button>
-        <div class="toggle-content">
-          <h4>History</h4>
-          <p>Built in 17th century; believed to be blessed by Guru Padmasambhava.</p>
-          <h4>Architecture</h4>
-          <p>Famous for chortens and "Thongwa Rangdol" stupa.</p>
-          <h4>Festivals</h4>
-          <p>Hosts Bumchu festival in February/March.</p>
-          <h4>Visitor Info</h4>
-          <p>40 km from Yuksom; accessible by road.</p>
-        </div>
+        <div class="card-text">Tashiding Monastery</div>
+        </a>
       </div>
+      <div class="description">
+        Situated on a hilltop, Tashiding is considered one of the holiest monasteries in Sikkim. It is believed to cleanse all sins and offers breathtaking views.
+      </div>
+    </div>
 
-      <div class="monastery-card">
+    <!-- Ralang -->
+    <div class="monastery odd">
+        <a href="ralang.html" class="card-link">
+      <div class="card">   
         <img src="ralang.jpg" alt="Ralang Monastery">
-        <h3>Ralang Monastery</h3>
-        <button class="toggle-btn">View Details</button>
-        <div class="toggle-content">
-          <h4>History</h4>
-          <p>Built in 1995; important center of Kagyu tradition.</p>
-          <h4>Architecture</h4>
-          <p>Grand courtyard, giant prayer wheels, beautiful frescoes.</p>
-          <h4>Festivals</h4>
-          <p>Pang Lhabsol and Mahakala Dance celebrated here.</p>
-          <h4>Visitor Info</h4>
-          <p>6 km from Ravangla; panoramic views of the mountains.</p>
-        </div>
+        <div class="card-text">Ralang Monastery</div>
+        </a>
       </div>
+      <div class="description">
+        Ralang Monastery is known for its vibrant festivals and elaborate rituals. It reflects Tibetan Buddhist architecture and attracts many pilgrims.
+      </div>
+    </div>
+
 
           <!-- FLOATING CHATBOT -->
     <div class="chatbot-button" id="chatbot-btn">
@@ -143,11 +125,9 @@
     </div>
     </div>
 
-    </div>
+  </div>
   </section>
 
   <script src="explore-script.js"></script>
-  <script src="chatbot.js"></script>
-
 </body>
 </html>
