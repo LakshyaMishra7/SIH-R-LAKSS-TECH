@@ -136,47 +136,76 @@
       .specialty { color: var(--muted); font-size: 0.9rem; }
       
       /* ---------- CAROUSEL ---------- */
-      .carousel-section {
-        max-width: var(--container-w);
-        margin: 20px auto;
-        padding: 0 16px;
-      }
-      .carousel {
-        overflow: hidden;
-        position: relative;
-      }
-      .carousel-inner {
-        display: flex;
-        transition: transform 0.5s ease;
-      }
-      .carousel-item {
-        min-width: 100%;
-        background: rgba(255,255,255,0.95);
-        padding: 20px;
-        border-radius: var(--radius-md);
-        box-shadow: 0 6px 16px rgba(13,13,10,0.06);
-      }
-      .carousel-item img {
-        max-width: 50%;
-        border-radius: 12px;
-        margin: 10px 0;
-      }
-      .carousel-controls {
-        display: flex;
-        justify-content: space-between;
-        margin-top: 12px;
-      }
-      .carousel-controls button {
-        background: var(--mint);
-        border: none;
-        color: var(--white);
-        padding: 6px 14px;
-        border-radius: 999px;
-        font-weight: 600;
-        cursor:pointer;
-        transition: transform 0.2s ease;
-      }
-      .carousel-controls button:hover { transform: translateY(-2px); }
+.carousel-section {
+  max-width: var(--container-w);
+  margin: 20px auto;
+  padding: 0 16px;
+  text-align: center; /* ✅ Center-align all content */
+}
+
+.carousel {
+  overflow: hidden;
+  position: relative;
+}
+
+.carousel-inner {
+  display: flex;
+  transition: transform 0.5s ease;
+}
+
+.carousel-item {
+  min-width: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 6px 16px rgba(13, 13, 10, 0.06);
+
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* ✅ Center-align image, heading, text */
+  text-align: center;
+}
+
+.carousel-item img {
+  max-width: 50%;
+  border-radius: 12px;
+  margin: 10px auto; /* ✅ Center image horizontally */
+  display: block;
+}
+
+.carousel-item h3 {
+  margin-top: 10px;
+}
+
+.carousel-item ul {
+  text-align: left;
+  margin: 10px auto;
+  display: inline-block; /* ✅ Keep list centered under text */
+}
+
+.carousel-controls {
+  display: flex;
+  justify-content: center; /* ✅ Center buttons horizontally */
+  gap: 20px; /* Adds space between buttons */
+  margin-top: 12px;
+}
+
+.carousel-controls button {
+  background: var(--mint);
+  border: none;
+  color: var(--white);
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.carousel-controls button:hover {
+  transform: translateY(-2px);
+  background: var(--mint-hover); /* optional hover color */
+}
+
       
       /* ---------- CHATBOT ---------- */
       .chatbot-button {
@@ -633,6 +662,7 @@
 </body>
 
 </html>
+
 
 
 
