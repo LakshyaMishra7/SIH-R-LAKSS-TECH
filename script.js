@@ -58,16 +58,27 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* ---------------------------
-     CHATBOT OPEN/CLOSE
-  ---------------------------- */
-  const chatbotBtn = document.getElementById("chatbot-btn");
-  const chatbotWindow = document.getElementById("chatbot-window");
-  if (chatbotBtn && chatbotWindow) {
-    chatbotBtn.addEventListener("click", () => {
-      chatbotWindow.classList.toggle("open");
-    });
-  }
+/* ---------------------------
+   CHATBOT OPEN/CLOSE
+---------------------------- */
+const chatbotBtn = document.getElementById("chatbot-btn");
+const chatbotWindow = document.getElementById("chatbot-window");
+
+if (chatbotBtn && chatbotWindow) {
+  chatbotBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // prevent accidental page jumps
+    chatbotWindow.classList.toggle("open");
+
+    // Optional: scroll chatbot window to bottom when opened
+    if (chatbotWindow.classList.contains("open")) {
+      const chatMessages = chatbotWindow.querySelector("#chat-messages");
+      if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+  });
+} else {
+  console.warn("⚠️ Chatbot button or window not found in DOM.");
+}
+
 
 
   /* ---------------------------
