@@ -1,3 +1,10 @@
+  const chatbotBtn = document.getElementById("chatbot-btn");
+  const chatbotWindow = document.getElementById("chatbot-window");
+  const chatInput = document.getElementById("chat-input");
+  const sendBtn = document.getElementById("send-btn");
+  const chatMessages = document.getElementById("chat-messages");
+
+
 document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      PARALLAX HERO SCROLL
@@ -67,16 +74,3 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  /* =========================
-     CHATBOT OPEN/CLOSE
-     (No changes to chatbot.js)
-  ========================== */
-  const chatbotBtn = document.getElementById("chatbot-btn");
-  const chatbotWindow = document.getElementById("chatbot-window");
-
-  if (chatbotBtn && chatbotWindow) {
-    chatbotBtn.addEventListener("click", () => {
-      chatbotWindow.classList.toggle("open");
-    });
-  }
-});
