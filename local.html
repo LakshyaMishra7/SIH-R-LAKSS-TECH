@@ -101,167 +101,213 @@
         margin-top: 4px;
       }
       
-/* ---------- CARDS & CONTAINER ---------- */
 .container {
-  max-width: var(--container-w);
-  margin: 40px auto;
-  display: grid;
-  gap: 32px;
-  grid-template-columns: repeat(3, 1fr); /* ✅ Exactly 3 cards per row */
-  padding: 0 20px;
-}
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly adjusted min-width */
+      gap: 30px; /* Increased gap */
+      padding: 40px;
+      max-width: 1280px; /* Wider container */
+      margin: 30px auto;
+    }
 
-.card {
-  background: #ffffff; /* ✅ Pure white background */
-  border-radius: var(--radius-lg);
-  padding: 28px;
-  box-shadow: 0 8px 28px rgba(13, 13, 10, 0.12);
-  border: 1px solid rgba(13, 13, 10, 0.06);
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-  color: #000000; /* ✅ All text inside stays black */
-}
+    /* Card Style */
+    .card {
+      background: #fff;
+      padding: 25px; /* Increased padding */
+      border-radius: 18px; /* Softer corners */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* More pronounced shadow */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e5e5e5; /* Subtle border */
+    }
 
-.card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 12px 36px rgba(13, 13, 10, 0.16);
-}
+    .card:hover {
+      transform: translateY(-7px); /* More noticeable lift */
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
 
-.card h2 {
-  font-size: 1.6rem;
-  margin-bottom: 12px;
-  font-weight: 700;
-  text-align: center;
-  color: #000000; /* ✅ Force heading to black */
-}
+    /* Info Status Text */
+    .card > p:first-of-type { /* Targeting the status paragraphs */
+      font-size: 0.95em;
+      color: #666;
+      margin-bottom: 15px;
+    }
 
-/* ---------- RECOMMENDATION CARDS ---------- */
-.food-card, .handicraft-card, .guide-card {
-  background: #ffffff;
-  color: #000000; /* ✅ Black text only */
-  padding: 16px;
-  border-radius: 12px;
-  box-shadow: 0 3px 8px rgba(13, 13, 10, 0.06);
-  margin: 10px 0;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
+    /* Select Dropdowns */
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+    select {
+      padding: 10px; /* Increased padding */
+      border-radius: 8px; /* Softer corners */
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      width: 100%;
+      box-sizing: border-box; /* Include padding in width */
+      background-color: #fefefe;
+      font-size: 1em;
+    }
+    select:focus {
+      border-color: #2a5298;
+      box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+      outline: none;
+    }
 
-.food-card:hover, .handicraft-card:hover, .guide-card:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 5px 14px rgba(13, 13, 10, 0.1);
-}
+    /* --- NEW: Style for the scrollable recommendation list --- */
+    .recommendation-list {
+        max-height: 400px; /* Sets a maximum height */
+        overflow-y: auto;  /* Adds a scrollbar only when needed */
+        padding-right: 10px; /* Prevents scrollbar from overlapping text */
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+    }
 
-.food-card h3,
-.handicraft-card h3,
-.guide-card h3 {
-  margin-bottom: 6px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #000000;
-}
+    /* Food, Handicraft & Guide Item Cards */
+    .food-card, .handicraft-card, .guide-card {
+      border: 1px solid #e0e0e0; /* Lighter border */
+      border-radius: 12px; /* Softer corners */
+      padding: 18px; /* Increased padding */
+      margin: 12px 0; /* Adjusted margin */
+      background: #fdfdfd; /* Slightly off-white */
+      transition: background 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Subtle inner shadow */
+    }
 
-.specialty {
-  color: #555555; /* ✅ Neutral grey for subtlety */
-  font-size: 0.95rem;
-  margin-bottom: 4px;
-}
+    .food-card:hover, .handicraft-card:hover, .guide-card:hover {
+      background: #e8f5fb; /* Light blue hover */
+      border-color: #a7d9f1;
+    }
 
-/* ---------- BUTTONS ---------- */
-select, button {
-  background: var(--mint);
-  color: #ffffff;
-  border: none;
-  padding: 12px 20px; /* ✅ Slightly larger for balance */
-  font-size: 1rem;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 600;
-  box-shadow: 0 3px 6px rgba(13, 13, 10, 0.1);
-  transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
-}
+    .food-card h3, .handicraft-card h3, .guide-card h3 {
+      margin: 0 0 8px 0;
+      color: #2a5298; /* Deeper blue for titles */
+      font-size: 1.25em;
+    }
 
-select:hover, button:hover {
-  background: var(--mint-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(13, 13, 10, 0.15);
-}
+    .food-card p, .handicraft-card p, .guide-card p {
+      margin: 5px 0 0 0;
+      font-size: 0.95em;
+      color: #555;
+    }
+    
+    .guide-card .specialty {
+        font-style: italic;
+        color: #777;
+        margin-top: -5px; /* Adjust spacing */
+    }
+    .food-card a, .handicraft-card a, .guide-card a {
+        color: #007bff; /* Standard link color */
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    .food-card a:hover, .handicraft-card a:hover, .guide-card a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
 
-select:focus, button:focus {
-  outline: none;
-  box-shadow: 0 0 0 3px rgba(70, 209, 180, 0.3);
-}
+    /* Carousel Section */
+    .carousel-section {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+    .carousel-section .card {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .carousel-section h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #1e3c72;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
 
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px; /* Match card radius */
+    }
 
-      
-      /* ---------- CAROUSEL ---------- */
-.carousel-section {
-  max-width: var(--container-w);
-  margin: 20px auto;
-  padding: 0 16px;
-  text-align: center; /* ✅ Center-align all content */
-}
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
+    }
 
-.carousel {
-  overflow: hidden;
-  position: relative;
-}
+    .carousel-item {
+      min-width: 100%;
+      box-sizing: border-box;
+      padding: 25px;
+      text-align: center;
+      background: #fdfdfd;
+    }
 
-.carousel-inner {
-  display: flex;
-  transition: transform 0.5s ease;
-}
+    .carousel-item img {
+        max-width: 100%;
+        height: 200px; /* Fixed height for consistency */
+        object-fit: cover; /* Cover the area, crop if necessary */
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
 
-.carousel-item {
-  min-width: 100%;
-  background: rgba(255, 255, 255, 0.95);
-  padding: 20px;
-  border-radius: var(--radius-md);
-  box-shadow: 0 6px 16px rgba(13, 13, 10, 0.06);
+    .carousel-item h3 {
+      margin-top: 15px;
+      color: #8e44ad;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
 
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* ✅ Center-align image, heading, text */
-  text-align: center;
-}
+    .carousel-item ul {
+      list-style: none;
+      padding: 0;
+      font-size: 1.05em;
+      text-align: left;
+      max-width: 500px;
+      margin: 15px auto 0 auto; /* Center list */
+    }
 
-.carousel-item img {
-  max-width: 40%;
-  border-radius: 12px;
-  margin: 10px auto; /* ✅ Center image horizontally */
-  display: block;
-}
+    .carousel-item li {
+      margin: 8px 0;
+      padding-left: 1.5em;
+      position: relative;
+      color: #444;
+    }
 
-.carousel-item h3 {
-  margin-top: 10px;
-}
+    .carousel-item li::before {
+      content: "•";
+      color: #28a745; /* Green checkmark dot */
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+      font-size: 1.2em;
+      line-height: 1;
+    }
 
-.carousel-item ul {
-  text-align: left;
-  margin: 10px auto;
-  display: inline-block; /* ✅ Keep list centered under text */
-}
+    .carousel-controls {
+      text-align: center;
+      margin-top: 20px;
+    }
 
-.carousel-controls {
-  display: flex;
-  justify-content: center; /* ✅ Center buttons horizontally */
-  gap: 20px; /* Adds space between buttons */
-  margin-top: 12px;
-}
+    .carousel-controls button {
+      background: #2a5298; /* Match header color */
+      border: none;
+      color: white;
+      padding: 10px 18px; /* Larger buttons */
+      border-radius: 8px;
+      margin: 0 8px; /* Increased margin */
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
 
-.carousel-controls button {
-  background: var(--mint);
-  border: none;
-  color: var(--white);
-  padding: 6px 14px;
-  border-radius: 999px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: transform 0.2s ease, background 0.2s ease;
-}
-
-.carousel-controls button:hover {
-  transform: translateY(-2px);
-  background: var(--mint-hover); /* optional hover color */
-}
+    .carousel-controls button:hover {
+      background: #1e3c72; /* Darker on hover */
+      transform: translateY(-2px);
+    }
 
       
       /* ---------- CHATBOT ---------- */
@@ -719,6 +765,7 @@ select:focus, button:focus {
 </body>
 
 </html>
+
 
 
 
