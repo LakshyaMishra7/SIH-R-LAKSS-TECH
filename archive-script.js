@@ -1,3 +1,7 @@
+/* =========================
+   ARCHIVE PAGE SCRIPT
+========================= */
+
 document.addEventListener("DOMContentLoaded", () => {
   /* =========================
      PARALLAX HERO SCROLL
@@ -12,40 +16,40 @@ document.addEventListener("DOMContentLoaded", () => {
 
   /* =========================
      NARRATOR SETUP
+     (keeps global flag for chatbot.js)
   ========================== */
-  let narratorEnabled = true;
+  window.narratorOn = true; // global flag for all scripts
   let isSpeaking = false; // track speech state
 
   const narratorBtn = document.getElementById("narrator-btn");
 
-  function narrator(text) {
-    if (!narratorEnabled) return;
-    window.speechSynthesis.cancel(); // stop any ongoing speech
-    if (!text) return;
+  window.speak = function (text) {
+    if (!window.narratorOn || !text) return;
+    window.speechSynthesis.cancel();
     const utter = new SpeechSynthesisUtterance(text);
     utter.rate = 0.9;
     utter.pitch = 1.0;
     utter.onstart = () => (isSpeaking = true);
     utter.onend = () => (isSpeaking = false);
     window.speechSynthesis.speak(utter);
-  }
+  };
 
   if (narratorBtn) {
     narratorBtn.addEventListener("click", () => {
-      narratorEnabled = !narratorEnabled;
-      window.speechSynthesis.cancel(); // stop any ongoing speech immediately
+      window.narratorOn = !window.narratorOn;
+      window.speechSynthesis.cancel();
       isSpeaking = false;
 
-      narratorBtn.innerHTML = narratorEnabled
+      narratorBtn.innerHTML = window.narratorOn
         ? "🔊 Narrator: On"
         : "🔇 Narrator: Off";
 
-      if (narratorEnabled) narrator("Narrator enabled.");
+      if (window.narratorOn) window.speak("Narrator enabled.");
     });
   }
 
   /* =========================
-     CARD NARRATION (with STOP on reclick)
+     CARD NARRATION BUTTONS
   ========================== */
   document.querySelectorAll(".archive-column").forEach(card => {
     const btn = document.createElement("button");
@@ -54,27 +58,27 @@ document.addEventListener("DOMContentLoaded", () => {
     card.appendChild(btn);
 
     btn.addEventListener("click", () => {
-      if (!narratorEnabled) return;
+      if (!window.narratorOn) return;
 
-      // If already speaking -> stop & exit
+      // Stop current speech if already speaking
       if (isSpeaking) {
         window.speechSynthesis.cancel();
         isSpeaking = false;
         return;
       }
 
-      // Otherwise, start narration
       const texts = Array.from(card.querySelectorAll("h2, h3, p, li"))
         .map(el => el.textContent.trim())
         .filter(Boolean)
         .join(". ");
 
-      narrator(texts);
+      window.speak(texts);
     });
   });
 
   /* =========================
-     CHATBOT IMPLEMENTATION
+     CHATBOT LOGIC
+     (uses global narratorOn & speak)
   ========================== */
   const chatbotBtn = document.getElementById("chatbot-btn");
   const chatbotWindow = document.getElementById("chatbot-window");
@@ -95,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     chatMessages.appendChild(p);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 
-    if (sender === "Bot") narrator(text);
+    if (sender === "Bot") window.speak(text);
   }
 
   function botReply(userMessage) {
