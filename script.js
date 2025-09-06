@@ -5,23 +5,23 @@ document.addEventListener("DOMContentLoaded", () => {
   let narratorOn = true;
   const narratorBtn = document.getElementById("narrator-btn");
 
+  // Unified speech function
   function speak(text, callback) {
-    if (!narratorOn) return;
-    window.speechSynthesis.cancel(); // stop previous speech
+    if (!narratorOn || !text) return;
+    window.speechSynthesis.cancel(); // stop any previous speech
     const utter = new SpeechSynthesisUtterance(text);
     utter.rate = 0.9;
     utter.pitch = 1.0;
     utter.lang = "en-IN";
-    utter.onend = () => {
-      if (callback) callback();
-    };
+    utter.onend = () => callback && callback();
     speechSynthesis.speak(utter);
   }
 
+  // Toggle narrator button
   if (narratorBtn) {
     narratorBtn.addEventListener("click", () => {
       narratorOn = !narratorOn;
-      window.speechSynthesis.cancel(); // stop any current speech
+      window.speechSynthesis.cancel(); // stop immediately
       narratorBtn.innerHTML = narratorOn
         ? '<i class="fa-solid fa-volume-high"></i> Narrator: ON'
         : '<i class="fa-solid fa-volume-xmark"></i> Narrator: OFF';
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------
-     SMOOTH SCROLL ON NAVBAR
+     SMOOTH SCROLL ON NAVBAR + FEATURE READING
   ---------------------------- */
   const navLinks = document.querySelectorAll(".navbar a[href^='#']");
   navLinks.forEach((link) => {
@@ -70,10 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Speak feature intro + read card titles
+      // Narrate features section when clicked
       if (targetHref.includes("features") && narratorOn) {
         window.speechSynthesis.cancel();
-        speak("Hey there, these are the features we have listed below.", () => {
+        speak("Here are the features we have listed below.", () => {
           const cards = document.querySelectorAll("#features .card h3");
           readCardsSequentially(cards, 0);
         });
@@ -81,7 +81,6 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // Helper: Read card titles sequentially
   function readCardsSequentially(cards, index) {
     if (index >= cards.length) return;
     speak(cards[index].textContent, () =>
@@ -90,7 +89,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------
-     CARD SLIDE-IN ON SCROLL
+     CARD SLIDE-IN + NARRATION
   ---------------------------- */
   const cards = document.querySelectorAll(".card");
   if (cards.length) {
@@ -107,12 +106,11 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       { threshold: 0.2 }
     );
-
     cards.forEach((card) => observer.observe(card));
   }
 
   /* ---------------------------
-     CHATBOT OPEN/CLOSE
+     CHATBOT OPEN/CLOSE + REPLIES
   ---------------------------- */
   const chatbotBtn = document.getElementById("chatbot-btn");
   const chatbotWindow = document.getElementById("chatbot-window");
@@ -135,18 +133,19 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.innerHTML = `<b>${sender}:</b> ${message}`;
     chatMessages.appendChild(msg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
-
     if (sender === "Bot" && narratorOn) speak(message);
   }
 
   function botReply(userText) {
     if (!userText.trim()) return;
     addMessage("You", userText);
+
     setTimeout(() => {
       let reply = "I’m still learning! Try asking about monasteries or routes.";
-      if (userText.toLowerCase().includes("monastery")) {
+      const lower = userText.toLowerCase();
+      if (lower.includes("monastery")) {
         reply = "There are over 200 monasteries in Sikkim! Rumtek is the largest.";
-      } else if (userText.toLowerCase().includes("route")) {
+      } else if (lower.includes("route")) {
         reply = "You can plan your route using the map feature below.";
       }
       addMessage("Bot", reply);
@@ -166,4 +165,9 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
+
+  /* ---------------------------
+     EXPOSE GLOBAL NARRATE HOOK (for map page)
+  ---------------------------- */
+  window.narrateAction = (text) => speak(text);
 });
