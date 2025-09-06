@@ -131,7 +131,7 @@ body {
 .hero-text {
   position: relative;
   z-index: 2;
-  color: var(--white);
+  color: #FFEE8C;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
   animation: fadeInUp 1s ease both;
 }
