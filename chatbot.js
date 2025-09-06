@@ -45,7 +45,7 @@ if (chatbotBtn && chatbotWindow) {
 }
 
 /* ---------------------------
-   APPEND + SPEAK MESSAGES
+   APPEND + (OPTIONAL) SPEAK
 ---------------------------- */
 function appendMessage(sender, text) {
   if (!chatMessages) return;
@@ -55,7 +55,11 @@ function appendMessage(sender, text) {
   chatMessages.scrollTop = chatMessages.scrollHeight;
   saveChat();
 
-  if (sender === "Bot" && narratorOn) speak(text);
+  // Speak only if narrator is ON and sender is bot
+  if (sender === "Bot" && window.narratorOn) {
+    window.speechSynthesis.cancel(); // stop any previous speech
+    window.speak(text);
+  }
 }
 
 /* ---------------------------
@@ -123,16 +127,3 @@ if (sendBtn && chatInput) {
 
 // 🔹 restore chat on page load
 restoreChat();
-
-/* ---------------------------
-   SPEECH SYNTHESIS
----------------------------- */
-function speak(text) {
-  if (!window.speechSynthesis) return;
-  window.speechSynthesis.cancel();
-  const utter = new SpeechSynthesisUtterance(text);
-  utter.rate = 0.9;
-  utter.pitch = 1;
-  utter.lang = "en-IN";
-  speechSynthesis.speak(utter);
-}
