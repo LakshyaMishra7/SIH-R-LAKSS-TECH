@@ -5,23 +5,23 @@ document.addEventListener("DOMContentLoaded", () => {
   let narratorOn = true;
   const narratorBtn = document.getElementById("narrator-btn");
 
-  // Unified speech function
   function speak(text, callback) {
-    if (!narratorOn || !text) return;
-    window.speechSynthesis.cancel(); // stop any previous speech
+    if (!narratorOn) return;
+    window.speechSynthesis.cancel(); // stop previous speech
     const utter = new SpeechSynthesisUtterance(text);
     utter.rate = 0.9;
     utter.pitch = 1.0;
     utter.lang = "en-IN";
-    utter.onend = () => callback && callback();
+    utter.onend = () => {
+      if (callback) callback();
+    };
     speechSynthesis.speak(utter);
   }
 
-  // Toggle narrator button
   if (narratorBtn) {
     narratorBtn.addEventListener("click", () => {
       narratorOn = !narratorOn;
-      window.speechSynthesis.cancel(); // stop immediately
+      window.speechSynthesis.cancel(); // stop any current speech
       narratorBtn.innerHTML = narratorOn
         ? '<i class="fa-solid fa-volume-high"></i> Narrator: ON'
         : '<i class="fa-solid fa-volume-xmark"></i> Narrator: OFF';
@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------
-     SMOOTH SCROLL ON NAVBAR + FEATURE READING
+     SMOOTH SCROLL ON NAVBAR + FEATURE NARRATION
   ---------------------------- */
   const navLinks = document.querySelectorAll(".navbar a[href^='#']");
   navLinks.forEach((link) => {
@@ -70,10 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Narrate features section when clicked
+      // Narrate features section
       if (targetHref.includes("features") && narratorOn) {
         window.speechSynthesis.cancel();
-        speak("Here are the features we have listed below.", () => {
+        speak("Hey there, these are the features we have listed below.", () => {
           const cards = document.querySelectorAll("#features .card h3");
           readCardsSequentially(cards, 0);
         });
@@ -106,11 +106,39 @@ document.addEventListener("DOMContentLoaded", () => {
       },
       { threshold: 0.2 }
     );
+
     cards.forEach((card) => observer.observe(card));
+
+    // Add narration button for each card
+    cards.forEach((card) => {
+      const narrateBtn = document.createElement("button");
+      narrateBtn.className = "card-narrate";
+      narrateBtn.textContent = "🔊 Narrate";
+      card.appendChild(narrateBtn);
+
+      let isReading = false;
+      narrateBtn.addEventListener("click", () => {
+        if (isReading) {
+          window.speechSynthesis.cancel();
+          isReading = false;
+          narrateBtn.textContent = "🔊 Narrate";
+        } else {
+          const texts = Array.from(card.querySelectorAll("h3, p, li"))
+            .map((el) => el.textContent)
+            .join(". ");
+          speak(texts, () => {
+            isReading = false;
+            narrateBtn.textContent = "🔊 Narrate";
+          });
+          isReading = true;
+          narrateBtn.textContent = "⏹ Stop";
+        }
+      });
+    });
   }
 
   /* ---------------------------
-     CHATBOT OPEN/CLOSE + REPLIES
+     CHATBOT OPEN/CLOSE + MESSAGES
   ---------------------------- */
   const chatbotBtn = document.getElementById("chatbot-btn");
   const chatbotWindow = document.getElementById("chatbot-window");
@@ -133,19 +161,18 @@ document.addEventListener("DOMContentLoaded", () => {
     msg.innerHTML = `<b>${sender}:</b> ${message}`;
     chatMessages.appendChild(msg);
     chatMessages.scrollTop = chatMessages.scrollHeight;
+
     if (sender === "Bot" && narratorOn) speak(message);
   }
 
   function botReply(userText) {
     if (!userText.trim()) return;
     addMessage("You", userText);
-
     setTimeout(() => {
       let reply = "I’m still learning! Try asking about monasteries or routes.";
-      const lower = userText.toLowerCase();
-      if (lower.includes("monastery")) {
+      if (userText.toLowerCase().includes("monastery")) {
         reply = "There are over 200 monasteries in Sikkim! Rumtek is the largest.";
-      } else if (lower.includes("route")) {
+      } else if (userText.toLowerCase().includes("route")) {
         reply = "You can plan your route using the map feature below.";
       }
       addMessage("Bot", reply);
@@ -165,9 +192,4 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-
-  /* ---------------------------
-     EXPOSE GLOBAL NARRATE HOOK (for map page)
-  ---------------------------- */
-  window.narrateAction = (text) => speak(text);
 });
