@@ -102,6 +102,7 @@ body {
   margin-bottom: 20px;
   color: var(--text);
   animation: fadeInDown 0.7s ease both;
+padding-top: 3rem;
 }
 
 @keyframes fadeInDown {
