@@ -139,7 +139,10 @@ const narratorBtn = document.getElementById("narrator-btn");
 if (narratorBtn) {
   narratorBtn.addEventListener("click", () => {
     narratorEnabled = !narratorEnabled;
+
+    // Stop any ongoing speech immediately
     window.speechSynthesis.cancel();
+
     narratorBtn.textContent = narratorEnabled
       ? "🔊 Narrator: On"
       : "🔇 Narrator: Off";
@@ -149,8 +152,16 @@ if (narratorBtn) {
 }
 
 /* =========================
-   CHATBOT INTEGRATION
-   (delegated to chatbot.js)
+   CHATBOT HOOKS
 ========================= */
-// Remove all chatbot logic from here
-// Just use global narrator to speak bot messages via chatbot.js
+// These only toggle the chatbot and allow calling narrator() from bot replies
+const chatbotBtn = document.getElementById("chatbot-btn");
+const chatbotWindow = document.getElementById("chatbot-window");
+
+if (chatbotBtn && chatbotWindow) {
+  chatbotBtn.addEventListener("click", () => {
+    chatbotWindow.classList.toggle("open");
+  });
+}
+
+// Optional: chatbot.js can call `narrator("Bot message")` for speech
