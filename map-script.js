@@ -1,5 +1,5 @@
 // ================================
-// MAP PAGE SCRIPT (WITH CHATBOT)
+// MAP PAGE SCRIPT (WITH CHATBOT SUPPORT)
 // ================================
 let map = L.map("mapid").setView([27.33, 88.61], 9);
 
@@ -18,17 +18,11 @@ let narratorEnabled = true; // default ON
 ========================= */
 function narrator(text) {
   if (!narratorEnabled || !text) return;
-  window.speechSynthesis.cancel(); // stop ongoing speech first
+  window.speechSynthesis.cancel();
   const speech = new SpeechSynthesisUtterance(text);
   speech.lang = "en-IN";
   speech.pitch = 1;
   speech.rate = 1;
-
-  // If narrator is turned off mid-speech, cancel immediately
-  speech.onstart = () => {
-    if (!narratorEnabled) window.speechSynthesis.cancel();
-  };
-
   window.speechSynthesis.speak(speech);
 }
 
@@ -145,10 +139,7 @@ const narratorBtn = document.getElementById("narrator-btn");
 if (narratorBtn) {
   narratorBtn.addEventListener("click", () => {
     narratorEnabled = !narratorEnabled;
-
-    // Stop any ongoing speech immediately
     window.speechSynthesis.cancel();
-
     narratorBtn.textContent = narratorEnabled
       ? "🔊 Narrator: On"
       : "🔇 Narrator: Off";
@@ -158,54 +149,8 @@ if (narratorBtn) {
 }
 
 /* =========================
-   CHATBOT LOGIC + NARRATION
+   CHATBOT INTEGRATION
+   (delegated to chatbot.js)
 ========================= */
-const chatbotBtn = document.getElementById("chatbot-btn");
-const chatbotWindow = document.getElementById("chatbot-window");
-const chatInput = document.getElementById("chat-input");
-const sendBtn = document.getElementById("send-btn");
-const chatMessages = document.getElementById("chat-messages");
-
-if (chatbotBtn && chatbotWindow) {
-  chatbotBtn.addEventListener("click", () => {
-    chatbotWindow.classList.toggle("open");
-  });
-}
-
-function appendMessage(sender, text) {
-  if (!chatMessages) return;
-  const p = document.createElement("p");
-  p.innerHTML = `<b>${sender}:</b> ${text}`;
-  chatMessages.appendChild(p);
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-
-  if (sender === "Bot") narrator(text); // ✅ Narrate bot replies (only if enabled)
-}
-
-function botReply(userMessage) {
-  let reply = "I'm still learning! Can you ask me about monasteries or tours?";
-  const msg = userMessage.toLowerCase();
-
-  if (msg.includes("hello")) reply = "Hi there! 👋";
-  else if (msg.includes("monastery"))
-    reply = "There are over 200 monasteries in Sikkim — want me to list some famous ones?";
-  else if (msg.includes("route"))
-    reply = "You can plan your tour by adding stops on the map. I can guide you!";
-
-  appendMessage("Bot", reply);
-}
-
-if (sendBtn && chatInput) {
-  sendBtn.addEventListener("click", () => {
-    const text = chatInput.value.trim();
-    if (text) {
-      appendMessage("You", text);
-      chatInput.value = "";
-      setTimeout(() => botReply(text), 500);
-    }
-  });
-
-  chatInput.addEventListener("keypress", (e) => {
-    if (e.key === "Enter") sendBtn.click();
-  });
-}
+// Remove all chatbot logic from here
+// Just use global narrator to speak bot messages via chatbot.js
