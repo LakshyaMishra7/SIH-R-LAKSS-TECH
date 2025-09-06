@@ -1,5 +1,34 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------------
+     NARRATOR SETUP
+  ---------------------------- */
+  let narratorOn = true;
+  const narratorBtn = document.getElementById("narrator-btn");
+
+  function speak(text, callback) {
+    if (!narratorOn) return;
+    window.speechSynthesis.cancel(); // stop previous speech
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.9;
+    utter.pitch = 1.0;
+    utter.lang = "en-IN";
+    utter.onend = () => {
+      if (callback) callback();
+    };
+    speechSynthesis.speak(utter);
+  }
+
+  if (narratorBtn) {
+    narratorBtn.addEventListener("click", () => {
+      narratorOn = !narratorOn;
+      window.speechSynthesis.cancel(); // stop any current speech
+      narratorBtn.innerHTML = narratorOn
+        ? '<i class="fa-solid fa-volume-high"></i> Narrator: ON'
+        : '<i class="fa-solid fa-volume-xmark"></i> Narrator: OFF';
+    });
+  }
+
+  /* ---------------------------
      HERO TEXT FADE + SLIDE IN
   ---------------------------- */
   const heroText = document.querySelector(".hero-text");
@@ -26,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------------
      SMOOTH SCROLL ON NAVBAR
   ---------------------------- */
-  const navLinks = document.querySelectorAll(".navbar a[href^='#'], .navbar a");
+  const navLinks = document.querySelectorAll(".navbar a[href^='#']");
   navLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       const targetHref = link.getAttribute("href");
@@ -41,16 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      /* =========================
-         FEATURES NAVBAR CLICK
-      ========================== */
+      // Speak feature intro + read card titles
       if (targetHref.includes("features") && narratorOn) {
-        // Stop any ongoing speech
         window.speechSynthesis.cancel();
-
-        // Speak custom intro message
-        speak("Hey there, these are the features which we have listed down below", () => {
-          // After intro, read card titles one-by-one
+        speak("Hey there, these are the features we have listed below.", () => {
           const cards = document.querySelectorAll("#features .card h3");
           readCardsSequentially(cards, 0);
         });
@@ -58,59 +81,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-/* ---------------------------
-   CHATBOT OPEN/CLOSE
----------------------------- */
-const chatbotBtn = document.getElementById("chatbot-btn");
-const chatbotWindow = document.getElementById("chatbot-window");
-
-if (chatbotBtn && chatbotWindow) {
-  chatbotBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // prevent accidental page jumps
-    chatbotWindow.classList.toggle("open");
-
-    // Optional: scroll chatbot window to bottom when opened
-    if (chatbotWindow.classList.contains("open")) {
-      const chatMessages = chatbotWindow.querySelector("#chat-messages");
-      if (chatMessages) chatMessages.scrollTop = chatMessages.scrollHeight;
-    }
-  });
-} else {
-  console.warn("⚠️ Chatbot button or window not found in DOM.");
-}
-
-
-
-  /* ---------------------------
-     NARRATOR SETUP
-  ---------------------------- */
-  const narratorBtn = document.getElementById("narrator-btn");
-  let narratorOn = true;
-
-  // Generic speak function with callback
-  function speak(text, callback) {
-    if (!narratorOn) return;
-    window.speechSynthesis.cancel(); // stop previous speech
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.9;
-    utter.pitch = 1.0;
-    utter.onend = () => {
-      if (callback) callback();
-    };
-    speechSynthesis.speak(utter);
-  }
-
-
-
-  if (narratorBtn) {
-    narratorBtn.addEventListener("click", () => {
-      narratorOn = !narratorOn;
-      // Stop any ongoing speech immediately
-      window.speechSynthesis.cancel();
-      narratorBtn.innerHTML = narratorOn
-        ? '<i class="fa-solid fa-volume-high"></i> Narrator: ON'
-        : '<i class="fa-solid fa-volume-xmark"></i> Narrator: OFF';
-    });
+  // Helper: Read card titles sequentially
+  function readCardsSequentially(cards, index) {
+    if (index >= cards.length) return;
+    speak(cards[index].textContent, () =>
+      readCardsSequentially(cards, index + 1)
+    );
   }
 
   /* ---------------------------
@@ -133,5 +109,61 @@ if (chatbotBtn && chatbotWindow) {
     );
 
     cards.forEach((card) => observer.observe(card));
+  }
+
+  /* ---------------------------
+     CHATBOT OPEN/CLOSE
+  ---------------------------- */
+  const chatbotBtn = document.getElementById("chatbot-btn");
+  const chatbotWindow = document.getElementById("chatbot-window");
+  const chatMessages = document.getElementById("chat-messages");
+  const chatInput = document.getElementById("chat-input");
+  const sendBtn = document.getElementById("send-btn");
+
+  if (chatbotBtn && chatbotWindow) {
+    chatbotBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      chatbotWindow.classList.toggle("open");
+      if (chatbotWindow.classList.contains("open")) {
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+      }
+    });
+  }
+
+  function addMessage(sender, message) {
+    const msg = document.createElement("p");
+    msg.innerHTML = `<b>${sender}:</b> ${message}`;
+    chatMessages.appendChild(msg);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    if (sender === "Bot" && narratorOn) speak(message);
+  }
+
+  function botReply(userText) {
+    if (!userText.trim()) return;
+    addMessage("You", userText);
+    setTimeout(() => {
+      let reply = "I’m still learning! Try asking about monasteries or routes.";
+      if (userText.toLowerCase().includes("monastery")) {
+        reply = "There are over 200 monasteries in Sikkim! Rumtek is the largest.";
+      } else if (userText.toLowerCase().includes("route")) {
+        reply = "You can plan your route using the map feature below.";
+      }
+      addMessage("Bot", reply);
+    }, 500);
+  }
+
+  if (sendBtn && chatInput) {
+    sendBtn.addEventListener("click", () => {
+      botReply(chatInput.value);
+      chatInput.value = "";
+    });
+
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") {
+        botReply(chatInput.value);
+        chatInput.value = "";
+      }
+    });
   }
 });
