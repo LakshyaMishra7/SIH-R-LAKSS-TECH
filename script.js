@@ -1,34 +1,5 @@
 document.addEventListener("DOMContentLoaded", () => {
   /* ---------------------------
-     NARRATOR SETUP
-  ---------------------------- */
-  let narratorOn = true;
-  const narratorBtn = document.getElementById("narrator-btn");
-
-  function speak(text, callback) {
-    if (!narratorOn) return;
-    window.speechSynthesis.cancel(); // stop previous speech
-    const utter = new SpeechSynthesisUtterance(text);
-    utter.rate = 0.9;
-    utter.pitch = 1.0;
-    utter.lang = "en-IN";
-    utter.onend = () => {
-      if (callback) callback();
-    };
-    speechSynthesis.speak(utter);
-  }
-
-  if (narratorBtn) {
-    narratorBtn.addEventListener("click", () => {
-      narratorOn = !narratorOn;
-      window.speechSynthesis.cancel(); // stop any current speech
-      narratorBtn.innerHTML = narratorOn
-        ? '<i class="fa-solid fa-volume-high"></i> Narrator: ON'
-        : '<i class="fa-solid fa-volume-xmark"></i> Narrator: OFF';
-    });
-  }
-
-  /* ---------------------------
      HERO TEXT FADE + SLIDE IN
   ---------------------------- */
   const heroText = document.querySelector(".hero-text");
@@ -53,9 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   /* ---------------------------
-     SMOOTH SCROLL ON NAVBAR + FEATURE NARRATION
+     SMOOTH SCROLL ON NAVBAR
   ---------------------------- */
-  const navLinks = document.querySelectorAll(".navbar a[href^='#']");
+  const navLinks = document.querySelectorAll(".navbar a[href^='#'], .navbar a");
   navLinks.forEach((link) => {
     link.addEventListener("click", (e) => {
       const targetHref = link.getAttribute("href");
@@ -70,10 +41,16 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
-      // Narrate features section
+      /* =========================
+         FEATURES NAVBAR CLICK
+      ========================== */
       if (targetHref.includes("features") && narratorOn) {
+        // Stop any ongoing speech
         window.speechSynthesis.cancel();
-        speak("Hey there, these are the features we have listed below.", () => {
+
+        // Speak custom intro message
+        speak("Hey there, these are the features which we have listed down below", () => {
+          // After intro, read card titles one-by-one
           const cards = document.querySelectorAll("#features .card h3");
           readCardsSequentially(cards, 0);
         });
@@ -81,15 +58,91 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  function readCardsSequentially(cards, index) {
-    if (index >= cards.length) return;
-    speak(cards[index].textContent, () =>
-      readCardsSequentially(cards, index + 1)
-    );
+  /* ---------------------------
+     CHATBOT OPEN/CLOSE
+  ---------------------------- */
+  const chatbotBtn = document.getElementById("chatbot-btn");
+  const chatbotWindow = document.getElementById("chatbot-window");
+  if (chatbotBtn && chatbotWindow) {
+    chatbotBtn.addEventListener("click", () => {
+      chatbotWindow.classList.toggle("open");
+    });
   }
 
   /* ---------------------------
-     CARD SLIDE-IN + NARRATION
+     CHATBOT MESSAGE HANDLING
+  ---------------------------- */
+  const chatInput = document.getElementById("chat-input");
+  const sendBtn = document.getElementById("send-btn");
+  const chatMessages = document.getElementById("chat-messages");
+
+  const appendMessage = (sender, text) => {
+    if (!chatMessages) return;
+    const p = document.createElement("p");
+    p.innerHTML = `<b>${sender}:</b> ${text}`;
+    chatMessages.appendChild(p);
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+
+    if (sender === "Bot" && narratorOn) speak(text);
+  };
+
+  const botReply = (msg) => {
+    let reply = "I'm still learning! Can you ask me about monasteries?";
+    const text = msg.toLowerCase();
+    if (text.includes("hello")) reply = "Hi there! 👋";
+    if (text.includes("monastery"))
+      reply = "There are over 200 monasteries in Sikkim — want me to list some famous ones?";
+    appendMessage("Bot", reply);
+  };
+
+  if (sendBtn && chatInput) {
+    sendBtn.addEventListener("click", () => {
+      const text = chatInput.value.trim();
+      if (!text) return;
+      appendMessage("You", text);
+      chatInput.value = "";
+      setTimeout(() => botReply(text), 500);
+    });
+
+    chatInput.addEventListener("keypress", (e) => {
+      if (e.key === "Enter") sendBtn.click();
+    });
+  }
+
+  /* ---------------------------
+     NARRATOR SETUP
+  ---------------------------- */
+  const narratorBtn = document.getElementById("narrator-btn");
+  let narratorOn = true;
+
+  // Generic speak function with callback
+  function speak(text, callback) {
+    if (!narratorOn) return;
+    window.speechSynthesis.cancel(); // stop previous speech
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.rate = 0.9;
+    utter.pitch = 1.0;
+    utter.onend = () => {
+      if (callback) callback();
+    };
+    speechSynthesis.speak(utter);
+  }
+
+
+
+  if (narratorBtn) {
+    narratorBtn.addEventListener("click", () => {
+      narratorOn = !narratorOn;
+      // Stop any ongoing speech immediately
+      window.speechSynthesis.cancel();
+      narratorBtn.innerHTML = narratorOn
+        ? '<i class="fa-solid fa-volume-high"></i> Narrator: ON'
+        : '<i class="fa-solid fa-volume-xmark"></i> Narrator: OFF';
+    });
+  }
+
+  /* ---------------------------
+     CARD SLIDE-IN ON SCROLL
   ---------------------------- */
   const cards = document.querySelectorAll(".card");
   if (cards.length) {
@@ -108,32 +161,5 @@ document.addEventListener("DOMContentLoaded", () => {
     );
 
     cards.forEach((card) => observer.observe(card));
-
-    // Add narration button for each card
-    cards.forEach((card) => {
-      const narrateBtn = document.createElement("button");
-      narrateBtn.className = "card-narrate";
-      narrateBtn.textContent = "🔊 Narrate";
-      card.appendChild(narrateBtn);
-
-      let isReading = false;
-      narrateBtn.addEventListener("click", () => {
-        if (isReading) {
-          window.speechSynthesis.cancel();
-          isReading = false;
-          narrateBtn.textContent = "🔊 Narrate";
-        } else {
-          const texts = Array.from(card.querySelectorAll("h3, p, li"))
-            .map((el) => el.textContent)
-            .join(". ");
-          speak(texts, () => {
-            isReading = false;
-            narrateBtn.textContent = "🔊 Narrate";
-          });
-          isReading = true;
-          narrateBtn.textContent = "⏹ Stop";
-        }
-      });
-    });
   }
-
+});
