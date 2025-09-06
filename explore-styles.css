@@ -135,107 +135,6 @@ body {
 }
 
 /* CARD GRID */
-.card-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 columns on large screens */
-  gap: 22px;
-  align-items: start;
-  justify-items: center;
-}
-
-/* ensure equal-sized cards and centered info */
-.monastery-card {
-  width: 100%;
-  max-width: 360px;
-  background: var(--white);
-  border-radius: var(--radius-md);
-  box-shadow: 0 8px 20px rgba(13,13,10,0.06);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* center aligned content */
-  text-align: center;  /* center text as requested */
-  padding: 14px;
-  min-height: 420px;   /* consistent height for uniform grid */
-  transition: transform 0.28s ease, box-shadow 0.28s ease;
-}
-.monastery-card:hover { transform: translateY(-6px); box-shadow: 0 12px 36px rgba(13,13,10,0.08); }
-
-/* IMAGE */
-.monastery-card img {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 12px;
-  display:block;
-  margin-bottom: 14px;
-  background: linear-gradient(180deg, #eee, #ddd); /* fallback while image loads */
-}
-
-/* CARD HEADLINE */
-.monastery-card h3 {
-  font-size: 1.15rem;
-  margin-bottom: 10px;
-  color: var(--text);
-}
-
-/* TOGGLE BUTTON */
-.toggle-btn {
-  background: linear-gradient(180deg, var(--mint), #66cc66);
-  color: var(--white);
-  border: none;
-  padding: 10px 14px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 700;
-  margin-bottom: 12px;
-  transition: transform 180ms ease;
-}
-.toggle-btn:hover { transform: translateY(-3px); }
-
-/* TOGGLE CONTENT - center aligned text, smooth expand/collapse using max-height */
-.toggle-content {
-  width: 100%;
-  text-align: center; /* center info as requested */
-  overflow: hidden;
-  max-height: 0;
-  padding: 0 6px;
-  transition: max-height 420ms ease, padding 420ms ease;
-  color: var(--text);
-  font-size: 0.95rem;
-  line-height: 1.45;
-  border-top: 1px dashed rgba(13,13,10,0.04);
-  margin-top: 8px;
-}
-.toggle-content.open {
-  padding: 12px 12px 18px;
-  max-height: 880px; /* sufficiently large to allow content to expand */
-}
-
-/* toggle headings inside content */
-.toggle-content h4 {
-  margin: 8px 0 6px;
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text);
-}
-
-/* paragraphs and lists inside toggles */
-.toggle-content p, .toggle-content ul {
-  margin: 6px 0 10px;
-}
-.toggle-content ul { list-style: disc; list-style-position: inside; padding-left: 0; }
-
-/* RESPONSIVE */
-@media (max-width: 1080px) {
-  .card-grid { grid-template-columns: repeat(2, 1fr); justify-items: center; }
-  .monastery-card { min-height: 400px; max-width: 420px; }
-}
-@media (max-width: 700px) {
-  .card-grid { grid-template-columns: 1fr; padding: 0 12px; }
-  .hero { height: 34vh; }
-  .monastery-card { min-height: auto; max-width: 720px; padding: 12px; }
-}
 
 /* CHATBOT (keeps your existing look) */
 .chatbot-button {
@@ -363,3 +262,120 @@ body {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
+/* Hero Section */
+    .hero {
+    position: relative;
+    height: 80vh; /* adjust: 40vh = slim, 60vh = taller */
+    background: url("photo1.png") center/cover no-repeat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #fff;
+    }
+
+    /* Dark overlay for readability */
+    .hero .overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.4); /* 40% dark overlay */
+    z-index: 1;
+    }
+
+    /* Text styling */
+    .hero-text {
+    position: relative;
+    z-index: 2;
+    }
+
+    .hero-text h1 {
+    font-size: 3rem;
+    margin: 0;
+    }
+
+    .hero-text p {
+    font-size: 1.2rem;
+    margin-top: 0.5rem;
+    }
+
+
+    /* Explore Grid */
+    .explore-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    align-items: stretch; /* makes rows align */
+    }
+
+    .monastery {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    overflow: hidden;
+    }
+
+    /* Alternate layout: even items = description above */
+    .monastery.even {
+    flex-direction: column-reverse;
+    }
+
+    .card {
+    position: relative;
+    flex: 1; /* make image section flexible */
+    min-height: 220px;
+    background: #000;
+    overflow: hidden;
+    }
+
+    .card img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    opacity: 0.85;
+    transition: 0.3s ease;
+    }
+
+    .card:hover img {
+    opacity: 1;
+    transform: scale(1.05);
+    }
+
+    .card-text {
+    position: absolute;
+    bottom: 15px;
+    left: 20px;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.3rem;
+    text-shadow: 1px 2px 6px rgba(0,0,0,0.8);
+    }
+    .card-link {
+    text-decoration: none;
+    color: inherit;
+    }
+
+    .description {
+    padding: 1rem;
+    font-size: 0.95rem;
+    color: #444;
+    flex-shrink: 0; /* description height stable */
+    }
+
+
+    /* Alternate layout: even items = description above */
+    .monastery.even {
+      flex-direction: column-reverse;
+    }
+    .explore-section {
+    padding-top: 5rem; /* space above the grid */
+    padding-bottom: 5rem; /* keep bottom balanced */
+    }
+    .explore-grid{
+        padding-right: 3rem;
+        padding-left: 3rem;
+    }
