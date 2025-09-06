@@ -317,7 +317,6 @@ p{
 }
 
 
-/* ---------- Chatbot (rounded, pastel) ---------- */
 .chatbot-button {
   position: fixed;
   bottom: 24px;
@@ -340,7 +339,13 @@ p{
   width: 100%;
   height: 100%;
   object-fit: contain;
+  pointer-events: none; /* ensure button clicks register */
 }
+
+.chatbot-window {
+  z-index: 1100; /* above everything else */
+}
+
 
 .chatbot-button:hover {
   transform: scale(1.08);
@@ -381,6 +386,50 @@ p{
   border:none; color:white; padding:8px 12px; border-radius:999px; cursor:pointer;
 }
 
+/* Chatbot Window Animation */
+.chatbot-window {
+  position: fixed;
+  bottom: 100px;
+  right: 24px;
+  width: 300px;
+  max-height: 400px;
+  background: #fdfbd4;
+  border: 2px solid #0d0d0a;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(13, 13, 10, 0.15);
+  display: none;
+  flex-direction: column;
+  overflow: hidden;
+  z-index: 1000;
+}
+
+.chatbot-window.open {
+  display: flex;
+  animation: fadeInUp 0.3s ease;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ======================
+   FLOATING ICONS (background decoration)
+   ====================== */
+.floating-icon {
+  position: absolute;
+  width: 32px;
+  height: 32px;
+  opacity: 0.15;
+  animation: floaty 12s ease-in-out infinite;
+}
+
+@keyframes floaty {
+  0%,100% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-18px) rotate(15deg); }
+}
+
+
 /* ---------- RESPONSIVE ---------- */
 @media (max-width:1080px){
   .carousel-container{ grid-template-columns: repeat(2, 1fr); padding-left:36px; padding-right:36px; }
@@ -413,33 +462,6 @@ p{
   background: rgba(255, 255, 255, 0.85);
   box-shadow: 0 4px 16px rgba(13, 13, 10, 0.08);
   backdrop-filter: blur(6px);
-}
-
-/* Chatbot Window Animation */
-.chatbot-window {
-  position: fixed;
-  bottom: 100px;
-  right: 24px;
-  width: 300px;
-  max-height: 400px;
-  background: #fdfbd4;
-  border: 2px solid #0d0d0a;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(13, 13, 10, 0.15);
-  display: none;
-  flex-direction: column;
-  overflow: hidden;
-  z-index: 1000;
-}
-
-.chatbot-window.open {
-  display: flex;
-  animation: fadeInUp 0.3s ease;
-}
-
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
 }
 
 /* Card Animation */
