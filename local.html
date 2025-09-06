@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sikkim Local Explorer - Discover Incredible India</title>
+  <link href="http://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Global Styles */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background: #f0f2f5; /* Lighter, subtle background */
+      color: #333;
+      line-height: 1.6;
+    }
+
+    /* Header */
+    .header {
+      background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%); /* Deep blue gradient */
+      color: #fff;
+      padding: 30px 40px;
+      text-align: center;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .header h1 {
+      font-family: 'Playfair Display', serif;
+      margin: 0;
+      font-size: 2.8em;
+      letter-spacing: 1px;
+      margin-bottom: 10px;
+    }
+    .header p {
+      font-size: 1.1em;
+      opacity: 0.9;
+    }
+
+    h2 {
+      color: #2c3e50;
+      margin-bottom: 15px;
+      font-size: 1.8em;
+      border-bottom: 2px solid #e0e0e0;
+      padding-bottom: 8px;
+    }
+
+    .container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Slightly adjusted min-width */
+      gap: 30px; /* Increased gap */
+      padding: 40px;
+      max-width: 1280px; /* Wider container */
+      margin: 30px auto;
+    }
+
+    /* Card Style */
+    .card {
+      background: #fff;
+      padding: 25px; /* Increased padding */
+      border-radius: 18px; /* Softer corners */
+      box-shadow: 0 8px 20px rgba(0,0,0,0.08); /* More pronounced shadow */
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid #e5e5e5; /* Subtle border */
+    }
+
+    .card:hover {
+      transform: translateY(-7px); /* More noticeable lift */
+      box-shadow: 0 12px 25px rgba(0,0,0,0.15);
+    }
+
+    /* Info Status Text */
+    .card > p:first-of-type { /* Targeting the status paragraphs */
+      font-size: 0.95em;
+      color: #666;
+      margin-bottom: 15px;
+    }
+
+    /* Select Dropdowns */
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      color: #555;
+    }
+    select {
+      padding: 10px; /* Increased padding */
+      border-radius: 8px; /* Softer corners */
+      border: 1px solid #ccc;
+      margin-bottom: 15px;
+      width: 100%;
+      box-sizing: border-box; /* Include padding in width */
+      background-color: #fefefe;
+      font-size: 1em;
+    }
+    select:focus {
+      border-color: #2a5298;
+      box-shadow: 0 0 0 3px rgba(42, 82, 152, 0.2);
+      outline: none;
+    }
+
+    /* --- NEW: Style for the scrollable recommendation list --- */
+    .recommendation-list {
+        max-height: 400px; /* Sets a maximum height */
+        overflow-y: auto;  /* Adds a scrollbar only when needed */
+        padding-right: 10px; /* Prevents scrollbar from overlapping text */
+        margin-top: 15px;
+        border-top: 1px solid #eee;
+    }
+
+    /* Food, Handicraft & Guide Item Cards */
+    .food-card, .handicraft-card, .guide-card {
+      border: 1px solid #e0e0e0; /* Lighter border */
+      border-radius: 12px; /* Softer corners */
+      padding: 18px; /* Increased padding */
+      margin: 12px 0; /* Adjusted margin */
+      background: #fdfdfd; /* Slightly off-white */
+      transition: background 0.2s ease, border-color 0.2s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05); /* Subtle inner shadow */
+    }
+
+    .food-card:hover, .handicraft-card:hover, .guide-card:hover {
+      background: #e8f5fb; /* Light blue hover */
+      border-color: #a7d9f1;
+    }
+
+    .food-card h3, .handicraft-card h3, .guide-card h3 {
+      margin: 0 0 8px 0;
+      color: #2a5298; /* Deeper blue for titles */
+      font-size: 1.25em;
+    }
+
+    .food-card p, .handicraft-card p, .guide-card p {
+      margin: 5px 0 0 0;
+      font-size: 0.95em;
+      color: #555;
+    }
+    
+    .guide-card .specialty {
+        font-style: italic;
+        color: #777;
+        margin-top: -5px; /* Adjust spacing */
+    }
+    .food-card a, .handicraft-card a, .guide-card a {
+        color: #007bff; /* Standard link color */
+        text-decoration: none;
+        transition: color 0.2s ease;
+    }
+    .food-card a:hover, .handicraft-card a:hover, .guide-card a:hover {
+        color: #0056b3;
+        text-decoration: underline;
+    }
+
+    /* Carousel Section */
+    .carousel-section {
+        max-width: 900px;
+        margin: 50px auto;
+        padding: 0 20px;
+    }
+    .carousel-section .card {
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    .carousel-section h2 {
+        text-align: center;
+        margin-bottom: 25px;
+        color: #1e3c72;
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
+    .carousel {
+      position: relative;
+      overflow: hidden;
+      border-radius: 15px; /* Match card radius */
+    }
+
+    .carousel-inner {
+      display: flex;
+      transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94); /* Smoother transition */
+    }
+
+    .carousel-item {
+      min-width: 100%;
+      box-sizing: border-box;
+      padding: 25px;
+      text-align: center;
+      background: #fdfdfd;
+    }
+
+    .carousel-item img {
+        max-width: 100%;
+        height: 200px; /* Fixed height for consistency */
+        object-fit: cover; /* Cover the area, crop if necessary */
+        border-radius: 10px;
+        margin-bottom: 15px;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    .carousel-item h3 {
+      margin-top: 15px;
+      color: #8e44ad;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+
+    .carousel-item ul {
+      list-style: none;
+      padding: 0;
+      font-size: 1.05em;
+      text-align: left;
+      max-width: 500px;
+      margin: 15px auto 0 auto; /* Center list */
+    }
+
+    .carousel-item li {
+      margin: 8px 0;
+      padding-left: 1.5em;
+      position: relative;
+      color: #444;
+    }
+
+    .carousel-item li::before {
+      content: "•";
+      color: #28a745; /* Green checkmark dot */
+      font-weight: bold;
+      position: absolute;
+      left: 0;
+      font-size: 1.2em;
+      line-height: 1;
+    }
+
+    .carousel-controls {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .carousel-controls button {
+      background: #2a5298; /* Match header color */
+      border: none;
+      color: white;
+      padding: 10px 18px; /* Larger buttons */
+      border-radius: 8px;
+      margin: 0 8px; /* Increased margin */
+      cursor: pointer;
+      font-size: 1.1em;
+      transition: background 0.2s ease, transform 0.2s ease;
+    }
+
+    .carousel-controls button:hover {
+      background: #1e3c72; /* Darker on hover */
+      transform: translateY(-2px);
+    }
+
+    /* Footer */
+    .footer {
+      text-align: center;
+      padding: 30px;
+      background: #2c3e50;
+      color: #ecf0f1;
+      margin-top: 50px;
+      font-size: 0.9em;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+    }
+
+    /* Responsive */
+    @media(max-width: 900px) {
+      .container {
+        grid-template-columns: 1fr;
+        padding: 20px;
+        margin: 20px auto;
+      }
+      .header h1 {
+        font-size: 2.2em;
+      }
+      .header p {
+        font-size: 1em;
+      }
+      .card {
+        padding: 20px;
+      }
+      .carousel-section {
+          padding: 0 10px;
+      }
+      .carousel-item img {
+          height: 160px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <h1>Local Explorer</h1>
+    <p>Discover the rich culture, delicious food, unique crafts, and expert local guides of Sikkim.</p>
+  </header>
+
+  <div class="container">
+    <div class="card">
+      <h2>🍜 Local Food Recommender</h2>
+      <p id="status">Detecting your location...</p>
+      <label for="region">Or select a region manually:</label>
+      <select id="region">
+        <option value="">-- Select Region --</option>
+        <option value="Gangtok">Gangtok</option>
+        <option value="Pelling">Pelling</option>
+        <option value="Rumtek">Rumtek</option>
+        <option value="Namchi">Namchi</option>
+        <option value="Lachen">Lachen</option>
+        <option value="Lachung">Lachung</option>
+        <option value="Yuksom">Yuksom</option>
+      </select>
+      <div id="food-recommendation" class="recommendation-list"></div>
+    </div>
+
+    <div class="card">
+      <h2>🛍️ Handicraft Finder</h2>
+      <p id="hc-status">Detecting your location...</p>
+      <label for="hc-region">Or select a region manually:</label>
+      <select id="hc-region">
+        <option value="">-- Select Region --</option>
+        <option value="Gangtok">Gangtok</option>
+        <option value="Pelling">Pelling</option>
+        <option value="Rumtek">Rumtek</option>
+        <option value="Namchi">Namchi</option>
+        <option value="Lachen">Lachen</option>
+        <option value="Lachung">Lachung</option>
+        <option value="Yuksom">Yuksom</option>
+      </select>
+       <div id="handicraft-recommendation" class="recommendation-list"></div>
+    </div>
+    
+    <div class="card">
+      <h2>🙋‍♂️ Local Guide Finder</h2>
+      <p id="guide-status">Detecting your location...</p>
+      <label for="guide-region">Or select a region manually:</label>
+      <select id="guide-region">
+        <option value="">-- Select Region --</option>
+        <option value="Gangtok">Gangtok</option>
+        <option value="Pelling">Pelling</option>
+        <option value="Namchi">Namchi</option>
+        <option value="Yuksom">Yuksom</option>
+      </select>
+       <div id="guide-recommendation" class="recommendation-list"></div>
+    </div>
+  </div>
+
+  <section class="carousel-section">
+    <div class="card">
+      <h2>🙏 Etiquette & Cultural Tips</h2>
+      <div class="carousel" id="etiquetteCarousel">
+        <div class="carousel-inner">
+          <div class="carousel-item">
+            <p>Respect local customs to enrich your travel experience.</p>
+            <img src="image 1.png" alt="Monastery interior with prayer flags">
+            <h3>Monastery Visits</h3>
+            <ul>
+              <li>✅ Remove shoes before entering monasteries.</li>
+              <li>✅ Walk clockwise around stupas and prayer wheels.</li>
+              <li>✅ Greet monks respectfully with folded hands.</li>
+            </ul>
+          </div>
+          <div class="carousel-item">
+            <p>Capture memories responsibly and mindfully.</p>
+            <img src="image 2.png" alt="Person taking a photo respectfully in a sacred space">
+            <h3>Photography & Sacred Sites</h3>
+            <ul>
+              <li>✅ Ask permission before taking photos inside temples or of people.</li>
+              <li>❌ Avoid touching sacred objects without consent.</li>
+              <li>❌ Don’t point your feet at Buddha statues or altars.</li>
+            </ul>
+          </div>
+          <div class="carousel-item">
+            <p>Celebrate with the locals during festive times!</p>
+            <img src="image 3.png" alt="People celebrating Losar, Tibetan New Year">
+            <h3>🎉 Losar (Tibetan New Year)</h3>
+            <ul>
+              <li>✅ Wear modest or traditional attire.</li>
+              <li>✅ Offer khata (ceremonial scarf) when greeting locals.</li>
+              <li>✅ Join prayer ceremonies respectfully if invited.</li>
+            </ul>
+          </div>
+          <div class="carousel-item">
+            <p>Observe holy days with reverence and understanding.</p>
+            <img src="image 4.png" alt="Monks during a Saga Dawa procession">
+            <h3>🕯️ Saga Dawa</h3>
+            <ul>
+              <li>✅ Stay silent during prayer processions and events.</li>
+              <li>✅ Avoid meat & alcohol on holy days.</li>
+              <li>✅ Light butter lamps only at designated spots.</li>
+            </ul>
+          </div>
+           <div class="carousel-item">
+            <p>Engage with the community and show appreciation.</p>
+            <img src="image 5.png" alt="Local market scene in Sikkim">
+            <h3>🤝 Community Interaction</h3>
+            <ul>
+              <li>✅ Support local businesses and artisans.</li>
+              <li>✅ Learn a few local phrases like "Tashi Delek" (hello).</li>
+              <li>❌ Bargain respectfully, avoid aggressive haggling.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="carousel-controls">
+          <button onclick="moveSlide(-1)">❮ Previous</button>
+          <button onclick="moveSlide(1)">Next ❯</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <p>&copy; 2024 Sikkim Local Explorer. Proudly part of Monastery360. All rights reserved.</p>
+  </footer>
+
+<script>
+  // --- NOTE: All links have been fixed to point to Google Maps search ---
+  const foodData = {
+    "Gangtok": [
+      { dish: "Thukpa & Momos", place: "Taste of Tibet (MG Marg)", link: "https://www.google.com/maps/search/?api=1&query=Taste%20of%20Tibet%2C%20Gangtok" },
+      { dish: "Sha Phaley & Wontons", place: "Roll House (MG Marg)", link: "https://www.google.com/maps/search/?api=1&query=Roll%20House%2C%20Gangtok" },
+      { dish: "Sikkimese Thali", place: "9'ine Native Cuisine (New Market)", link: "https://www.google.com/maps/search/?api=1&query=9ine%20Native%20Cuisine%2C%20Gangtok" },
+      { dish: "Pastries & Coffee", place: "Baker's Cafe (MG Marg)", link: "https://www.google.com/maps/search/?api=1&query=Baker's%20Cafe%2C%20Gangtok" },
+      { dish: "Chang (Millet Beer)", place: "Local Brew Pubs & Eateries", link: "https://www.google.com/maps/search/?api=1&query=Traditional%20Chang%20Gangtok" }
+    ],
+    "Pelling": [
+      { dish: "Traditional Lepcha Cuisine", place: "Lepcha Farmhouse Kitchen", link: "https://www.google.com/maps/search/?api=1&query=Lepcha%20Farmhouse%20Kitchen%2C%20Pelling" },
+      { dish: "Indian & Tibetan Food", place: "Melting Point Restaurant", link: "https://www.google.com/maps/search/?api=1&query=Melting%20Point%20Restaurant%2C%20Pelling" }
+    ],
+    "Rumtek": [
+      { dish: "Snacks & Tea", place: "Rumtek Monastery Café", link: "https://www.google.com/maps/search/?api=1&query=Rumtek%20Monastery%20Café" },
+      { dish: "Simple Local Meals", place: "Shambala Restaurant", link: "https://www.google.com/maps/search/?api=1&query=Shambala%20Restaurant%2C%20Rumtek" }
+    ],
+    "Namchi": [
+        { dish: "Temi Tea & Local Snacks", place: "Cafes near Char Dham Complex", link: "https://www.google.com/maps/search/?api=1&query=Cafe%20Char%20Dham%2C%20Namchi" },
+        { dish: "Nepali Thali", place: "Local Dhabas near Market", link: "https://www.google.com/maps/search/?api=1&query=Nepali%20Thali%20Namchi" }
+    ],
+    "Lachen": [ { dish: "Hearty Local Meal (Dal Bhat)", place: "Lachen View Point Eateries", link: "https://www.google.com/maps/search/?api=1&query=Lachen%20eateries" } ],
+    "Lachung": [ { dish: "Yak Cheese (Churpi) & Snacks", place: "Yumthang Valley Local Stalls", link: "https://www.google.com/maps/search/?api=1&query=Yumthang%20Valley%20stalls" } ],
+    "Yuksom": [
+        { dish: "Tongba (Millet Beer) & Local Food", place: "Gupta Restaurant, Yuksom", link: "https://www.google.com/maps/search/?api=1&query=Gupta%20Restaurant%2C%20Yuksom" },
+        { dish: "Traditional Sikkimese Food", place: "Yak Restaurant", link: "https://www.google.com/maps/search/?api=1&query=Yak%20Restaurant%2C%20Yuksom" }
+    ]
+  };
+
+  const handicraftData = {
+    "Gangtok": [
+      { item: "Thangka Paintings & Carpets", shop: "Directorate of Handicrafts & Handloom", link: "https://www.google.com/maps/search/?api=1&query=Directorate%20of%20Handicrafts%20Handloom%2C%20Gangtok" },
+      { item: "Masks, Textiles & Souvenirs", shop: "Lal Bazaar Market", link: "https://www.google.com/maps/search/?api=1&query=Lal%20Bazaar%20Market%2C%20Gangtok" },
+      { item: "Prayer Wheels & Incense", shop: "MG Marg Souvenir Shops", link: "https://www.google.com/maps/search/?api=1&query=MG%20Marg%20Souvenir%20Shops%2C%20Gangtok" }
+    ],
+    "Pelling": [
+      { item: "Wood Carvings & Local Crafts", shop: "Pelling Handicraft Centre", link: "https://www.google.com/maps/search/?api=1&query=Pelling%20Handicraft%20Centre" },
+      { item: "Woven shawls and bags", shop: "Rural Craft & Cultural Centre", link: "https://www.google.com/maps/search/?api=1&query=Rural%20Craft%20Centre%2C%20Pelling" }
+    ],
+    "Rumtek": [ { item: "Prayer Flags & Small Souvenirs", shop: "Rumtek Monastery Local Stalls", link: "https://www.google.com/maps/search/?api=1&query=Rumtek%20Monastery%20Stalls" } ],
+    "Namchi": [
+        { item: "Buddhist Statues & Souvenirs", shop: "Shops near Samdruptse Hill", link: "https://www.google.com/maps/search/?api=1&query=Samdruptse%20Hill%20shops%2C%20Namchi" },
+        { item: "Temi Tea Souvenir Shop", shop: "Temi Tea Garden Outlet", link: "https://www.google.com/maps/search/?api=1&query=Temi%20Tea%20Garden%20Outlet%2C%20Namchi" }
+    ],
+    "Lachen": [ { item: "Woven Woolen Goods (Caps, Gloves)", shop: "Lachen Local Cooperative Shops", link: "https://www.google.com/maps/search/?api=1&query=Lachen%20Cooperative%20Shops" } ],
+    "Lachung": [ { item: "Hand-knitted Woolens & Blankets", shop: "Lachung Women's Weaving Cooperative", link: "https://www.google.com/maps/search/?api=1&query=Lachung%20Women's%20Weaving%20Cooperative" } ],
+    "Yuksom": [ { item: "Trekking Gear & Local Crafts", shop: "Yuksom Main Market", link: "https://www.google.com/maps/search/?api=1&query=Yuksom%20Main%20Market" } ]
+  };
+
+  const guideData = {
+    "Gangtok": [
+      { name: "Tenzing's City Walks", specialty: "Monasteries & Local Markets Tour", link: "https://www.google.com/maps/search/?api=1&query=Tenzing's%20City%20Walks%2C%20Gangtok" },
+      { name: "Pema's Adventure Tours", specialty: "Day Hikes to Tashi View Point", link: "https://www.google.com/maps/search/?api=1&query=Pema's%20Adventure%20Tours%2C%20Gangtok" },
+      { name: "Sikkim Motorbike Rentals & Tours", specialty: "Guided Royal Enfield Tours", link: "https://www.google.com/maps/search/?api=1&query=Sikkim%20Motorbike%20Rentals%20%26%20Tours%2C%20Gangtok" }
+    ],
+    "Pelling": [
+      { name: "Kanchenjunga View Treks", specialty: "Local sightseeing & Monastery visits", link: "https://www.google.com/maps/search/?api=1&query=Kanchenjunga%20View%20Treks%2C%20Pelling" },
+      { name: "Himalayan Birding Tours", specialty: "Guided bird watching in Pelling", link: "https://www.google.com/maps/search/?api=1&query=Himalayan%20Birding%20Tours%2C%20Pelling" }
+    ],
+    "Namchi": [
+      { name: "Chardham Pilgrimage Guides", specialty: "Spiritual tours of Namchi area", link: "https://www.google.com/maps/search/?api=1&query=Chardham%20Pilgrimage%20Guides%2C%20Namchi" },
+      { name: "Maenam Sanctuary Treks", specialty: "Guided hikes in Maenam Wildlife Sanctuary", link: "https://www.google.com/maps/search/?api=1&query=Maenam%20Sanctuary%20Treks%2C%20Namchi" }
+    ],
+    "Yuksom": [
+      { name: "Yuksom Trekking Guides Co-op", specialty: "Guides for Goecha La & Dzongri Treks", link: "https://www.google.com/maps/search/?api=1&query=Yuksom%20Trekking%20Guides%20Co-op" },
+      { name: "Red Panda Treks & Tours", specialty: "Local cultural and nature walks", link: "https://www.google.com/maps/search/?api=1&query=Red%20Panda%20Treks%20%26%20Tours%2C%20Yuksom" }
+    ]
+  };
+
+  function recommendFood(region) {
+    const recDiv = document.getElementById("food-recommendation");
+    recDiv.innerHTML = "";
+    if (foodData[region]) {
+      foodData[region].forEach(item => {
+        recDiv.innerHTML += `<div class="food-card"><h3>${item.dish}</h3><p><strong>Where to try:</strong> <a href="${item.link}" target="_blank">${item.place}</a></p></div>`;
+      });
+    } else { recDiv.innerHTML = "<p>No food recommendations for this region yet.</p>"; }
+  }
+
+  function recommendHandicraft(region) {
+    const recDiv = document.getElementById("handicraft-recommendation");
+    recDiv.innerHTML = "";
+    if (handicraftData[region]) {
+      handicraftData[region].forEach(item => {
+        recDiv.innerHTML += `<div class="handicraft-card"><h3>${item.item}</h3><p><strong>Where to buy:</strong> <a href="${item.link}" target="_blank">${item.shop}</a></p></div>`;
+      });
+    } else { recDiv.innerHTML = "<p>No handicraft recommendations for this region yet.</p>"; }
+  }
+
+  function recommendGuide(region) {
+    const recDiv = document.getElementById("guide-recommendation");
+    recDiv.innerHTML = "";
+    if (guideData[region]) {
+      guideData[region].forEach(item => {
+        recDiv.innerHTML += `<div class="guide-card"><h3>${item.name}</h3><p class="specialty">${item.specialty}</p><p><strong>Contact:</strong> <a href="${item.link}" target="_blank">Find on Google</a></p></div>`;
+      });
+    } else { recDiv.innerHTML = "<p>No local guides listed for this region yet.</p>"; }
+  }
+
+  document.getElementById("region").addEventListener("change", e => recommendFood(e.target.value));
+  document.getElementById("hc-region").addEventListener("change", e => recommendHandicraft(e.target.value));
+  document.getElementById("guide-region").addEventListener("change", e => recommendGuide(e.target.value));
+
+  // Geolocation logic
+  window.addEventListener('DOMContentLoaded', (event) => {
+    const status = document.getElementById('status');
+    const hcStatus = document.getElementById('hc-status');
+    const guideStatus = document.getElementById('guide-status');
+    const foodSelect = document.getElementById('region');
+    const hcSelect = document.getElementById('hc-region');
+    const guideSelect = document.getElementById('guide-region');
+
+    const locations = {
+      'Gangtok': { lat: [27.30, 27.36], lon: [88.58, 88.64] },
+      'Pelling': { lat: [27.29, 27.35], lon: [88.21, 88.27] },
+      'Rumtek':  { lat: [27.26, 27.30], lon: [88.55, 88.59] },
+      'Namchi':  { lat: [27.14, 27.20], lon: [88.33, 88.38] },
+      'Lachen': { lat: [27.60, 27.64], lon: [88.50, 88.54] },
+      'Lachung': { lat: [27.66, 27.70], lon: [88.73, 88.77] },
+      'Yuksom': { lat: [27.36, 27.40], lon: [88.19, 88.23] }
+    };
+
+    function getRegionFromCoords(lat, lon) {
+      for (const region in locations) {
+        const bounds = locations[region];
+        if (lat >= bounds.lat[0] && lat <= bounds.lat[1] && lon >= bounds.lon[0] && lon <= bounds.lon[1]) { return region; }
+      }
+      return null;
+    }
+
+    function success(position) {
+      const detectedRegion = getRegionFromCoords(position.coords.latitude, position.coords.longitude);
+
+      if (detectedRegion) {
+        const successMsg = `Location detected: ${detectedRegion}. Showing local recommendations.`;
+        status.textContent = successMsg;
+        hcStatus.textContent = successMsg;
+        guideStatus.textContent = successMsg;
+
+        foodSelect.value = detectedRegion;
+        hcSelect.value = detectedRegion;
+        guideSelect.value = detectedRegion;
+
+        recommendFood(detectedRegion);
+        recommendHandicraft(detectedRegion);
+        recommendGuide(detectedRegion);
+      } else {
+        const failMsg = 'Could not auto-detect a specific region in Sikkim. Please select one manually.';
+        status.textContent = failMsg;
+        hcStatus.textContent = failMsg;
+        guideStatus.textContent = 'Find guides from small, local businesses. Could not auto-detect your region.';
+      }
+    }
+
+    function error() {
+      const errorMsg = 'Unable to retrieve your location. Please select a region manually.';
+      status.textContent = errorMsg;
+      hcStatus.textContent = errorMsg;
+      guideStatus.textContent = 'Find guides from small, local businesses. ' + errorMsg;
+    }
+
+    if (!navigator.geolocation) {
+      const noSupportMsg = 'Geolocation is not supported by your browser. Please select a region manually.';
+      status.textContent = noSupportMsg;
+      hcStatus.textContent = noSupportMsg;
+      guideStatus.textContent = 'Find guides from small, local businesses. ' + noSupportMsg;
+    } else {
+      navigator.geolocation.getCurrentPosition(success, error);
+    }
+  });
+
+  // Carousel functionality
+  let currentSlide = 0;
+  function moveSlide(dir) {
+    const carouselInner = document.querySelector("#etiquetteCarousel .carousel-inner");
+    const totalSlides = document.querySelectorAll("#etiquetteCarousel .carousel-item").length;
+    currentSlide = (currentSlide + dir + totalSlides) % totalSlides;
+    carouselInner.style.transform = `translateX(-${currentSlide * 100}%)`;
+  }
+</script>
+</body>
+</html>
